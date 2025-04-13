@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
+using YoutubeApi.Application.UseCases.CommentUseCases;
+using YoutubeApi.Application.UseCases.VideoUseCases;
 using YoutubeApi.Domain.Entities;
 using YoutubeApi.Infrastructure.Persistence.Contexts;
 
@@ -9,17 +11,12 @@ namespace YoutubeApi.Web.Pages
     public partial class Comments
     {
         [Parameter] public Guid VideoId { get; set; }
-        [Inject] IDbContextFactory<VideoDbContext> DbContextFactory { get; set; }
+        [Inject] public GetCommentsUseCase GetCommentsUseCase { get; set; }
+        [Inject] public GetUserIdByVideoIdUseCase GetUserIdByVideoIdUseCase { get; set; }
         public Video Video { get; set; }
         public IList<Comment> CommentList = new List<Comment>();
         private string _userMessage;
-        private VideoDbContext _context;
         private bool _isBusy;
-
-        protected override async Task OnInitializedAsync()
-        {
-            
-        }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -28,17 +25,10 @@ namespace YoutubeApi.Web.Pages
                 _isBusy = true;
                 await InvokeAsync(StateHasChanged);
 
-                if (_context is null)
-                    _context = await DbContextFactory.CreateDbContextAsync();
-
                 if (VideoId != Guid.Empty)
                 {
-                    var comments = await _context.Comments
-                        .Include(c => c.Video)
-                        //.Include(c => c.ChildComments)
-                        .Where(c => c.VideoId == VideoId)
-                        .OrderBy(c => c.CreatedAt)
-                        .ToListAsync();
+                    var comments = await GetCommentsUseCase.ExecuteAsync(VideoId);
+
                     if (comments != null)
                     {
                         CommentList = comments;
@@ -57,10 +47,7 @@ namespace YoutubeApi.Web.Pages
 
         private async Task Back()
         {
-            // Navigate Back
-            var userId = await _context.Videos.Where(v => v.Id == VideoId)
-                .Select(v => v.UserId)
-                .FirstOrDefaultAsync();
+            var userId = await GetUserIdByVideoIdUseCase.ExecuteAsync(VideoId);
             NavigationManager.NavigateTo($"/videos/{userId}");
         }
     }

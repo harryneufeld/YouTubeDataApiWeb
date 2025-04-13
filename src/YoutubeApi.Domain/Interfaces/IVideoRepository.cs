@@ -10,5 +10,7 @@ namespace YoutubeApi.Domain.Interfaces
         Task<int> SaveChangesAsync();
         Task RemoveComment(Comment comment);
         IQueryable<IGrouping<Guid, Video>> QueryVideosGroupedByUser();
+        Task<List<Comment>> GetCommentsByVideoIdAsync(Guid videoId);
+        Task<Guid?> GetUserIdByVideoIdAsync(Guid videoId);
     }
 }

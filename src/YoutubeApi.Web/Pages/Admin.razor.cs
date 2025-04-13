@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using YoutubeApi.Application.Dto;
-using YoutubeApi.Application.UseCases;
+using YoutubeApi.Application.UseCases.VideoUseCases;
 
 namespace YoutubeApi.Web.Pages
 {

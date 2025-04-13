@@ -21,14 +21,33 @@ namespace YoutubeApi.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<Comment>> GetCommentsByVideoIdAsync(Guid videoId)
+        {
+            return await _context.Comments
+                .Include(c => c.Video)
+                .Where(c => c.VideoId == videoId)
+                .OrderBy(c => c.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<Guid?> GetUserIdByVideoIdAsync(Guid videoId)
+        {
+            return await _context.Videos
+                .Where(v => v.Id == videoId)
+                .Select(v => v.UserId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task AddVideoAsync(Video video)
         {
             await _context.Videos.AddAsync(video);
+            await SaveChangesAsync();
         }
 
         public async Task DeleteVideoAsync(Video video)
         {
             _context.Videos.Remove(video);
+            await SaveChangesAsync();
         }
 
         public async Task<int> SaveChangesAsync()
@@ -39,7 +58,7 @@ namespace YoutubeApi.Infrastructure.Persistence.Repositories
         public async Task RemoveComment(Comment comment)
         {
             _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync();
+            await SaveChangesAsync();
         }
 
         public IQueryable<IGrouping<Guid, Video>> QueryVideosGroupedByUser()

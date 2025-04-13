@@ -5,6 +5,8 @@ using YoutubeApi.Web.Components;
 using YoutubeApi.Application.UseCases;
 using YoutubeApi.Domain.Interfaces;
 using YoutubeApi.Infrastructure.Persistence.Repositories;
+using YoutubeApi.Application.UseCases.VideoUseCases;
+using YoutubeApi.Application.UseCases.CommentUseCases;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,8 @@ builder.Services.AddTransient<SaveChangesUseCase>();
 builder.Services.AddTransient<ImportVideosUseCase>();
 builder.Services.AddTransient<RemoveCommentUseCase>();
 builder.Services.AddTransient<QueryAllVideosUseCase>();
+builder.Services.AddTransient<GetCommentsUseCase>();
+builder.Services.AddTransient<GetUserIdByVideoIdUseCase>();
 builder.Services.AddScoped<IVideoRepository, VideoRepository>();
 
 var app = builder.Build();

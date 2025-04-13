@@ -1,7 +1,7 @@
 using YoutubeApi.Domain.Entities;
 using YoutubeApi.Domain.Interfaces;
 
-namespace YoutubeApi.Application.UseCases
+namespace YoutubeApi.Application.UseCases.VideoUseCases
 {
     public class GetVideosByUserIdUseCase
     {

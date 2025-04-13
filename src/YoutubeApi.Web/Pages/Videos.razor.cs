@@ -14,6 +14,7 @@ using YoutubeApi.Infrastructure.ApiClients.v3.Models.VideoData;
 using YoutubeApi.Domain.Entities;
 using YoutubeApi.Domain.Entities.ExportData;
 using YoutubeApi.Application.UseCases;
+using YoutubeApi.Application.UseCases.VideoUseCases;
 
 namespace YoutubeApi.Web.Pages
 {
