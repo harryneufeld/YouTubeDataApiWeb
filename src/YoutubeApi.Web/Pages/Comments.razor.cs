@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
+using YoutubeApi.Domain.Entities;
 using YoutubeApi.Infrastructure.Persistence.Contexts;
-using YoutubeApi.Infrastructure.Persistence.Models;
 
 namespace YoutubeApi.Web.Pages
 {

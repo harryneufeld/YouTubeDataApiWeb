@@ -1,21 +1,19 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using Serilog;
 using System.ComponentModel;
 using System.IO.Compression;
-using YoutubeApi.Application.Dto.Excel;
 using YoutubeApi.Application.Mapper;
 using YoutubeApi.Infrastructure.ApiClients.v3.CommentThreads;
 using YoutubeApi.Infrastructure.ApiClients.v3.Videos;
-using YoutubeApi.Infrastructure.Persistence.Contexts;
-using YoutubeApi.Infrastructure.Persistence.Models.ExportData;
-using YoutubeApi.Infrastructure.Persistence.Models;
 using YoutubeApi.Infrastructure.IO;
-using YoutubeApi.Domain.Models.CommentThread;
-using YoutubeApi.Domain.Models.VideoData;
+using YoutubeApi.Infrastructure.ApiClients.v3.Models.CommentThread;
+using YoutubeApi.Infrastructure.ApiClients.v3.Models.VideoData;
+using YoutubeApi.Domain.Entities;
+using YoutubeApi.Domain.Entities.ExportData;
+using YoutubeApi.Application.UseCases;
 
 namespace YoutubeApi.Web.Pages
 {
@@ -25,14 +23,15 @@ namespace YoutubeApi.Web.Pages
         [Inject] NavigationManager NavigationManager { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
         [Inject] private IConfiguration _config { get; set; }
-        [Inject] private IDbContextFactory<VideoDbContext> _dbContextFactory { get; set; }
+        [Inject] private GetVideosByUserIdUseCase GetVideosByUserIdUseCase { get; set; }
+        [Inject] private AddVideoUseCase AddVideoUseCase { get; set; }
+        [Inject] private DeleteVideoUseCase DeleteVideoUseCase { get; set; }
+
         public Video Video { get; set; } = new Video();
         public IList<Video> VideoList = new List<Video>();
 
         private MarkupString _userMessage;
-        private VideoDbContext _context;
         private string _downloadPath;
-        private string[] _downloadFiles;
         private string _file;
         private bool _isDownloadReady = false;
         private int _downloadProgress = 0;
@@ -47,16 +46,9 @@ namespace YoutubeApi.Web.Pages
                 _isBusy = true;
                 await InvokeAsync(StateHasChanged);
 
-                if (_context is null)
-                    _context = await _dbContextFactory.CreateDbContextAsync();
-
                 if (UserId != Guid.Empty)
                 {
-                    var videos = await _context.Videos
-                        .Where(v => v.UserId == UserId)
-                        //.Include(v => v.Comments)
-                        //    .ThenInclude(c => c.ChildComments)
-                        .ToListAsync();
+                    List<Video> videos = await GetVideosByUserIdUseCase.ExecuteAsync(UserId);
                     if (videos != null)
                         VideoList = videos;
                     else
@@ -78,23 +70,19 @@ namespace YoutubeApi.Web.Pages
             {
                 UserId = Guid.NewGuid();
             }
+
             try
             {
                 Video.UserId = UserId;
                 Video.PublicId = Video.PublicId!.Trim();
-                _context.Videos.Add(Video);
-                if (await _context.SaveChangesAsync() > 0)
-                    NavigationManager.NavigateTo($"videos/{UserId}");
-                else
-                {
-                    _userMessage = new MarkupString("Video was added.");
-                    await InvokeAsync(StateHasChanged);
-                }
+                await AddVideoUseCase.ExecuteAsync(Video);
+                NavigationManager.NavigateTo($"videos/{UserId}");
             }
             catch (Exception e)
             {
                 _userMessage = new MarkupString(e.Message + (e.InnerException != null ? e.InnerException.Message : ""));
             }
+
             VideoList.Add(Video);
             Video = new Video();
             await InvokeAsync(StateHasChanged);
@@ -538,21 +526,21 @@ namespace YoutubeApi.Web.Pages
 
         private async Task DeleteVideo(Video video)
         {
-            _context.Videos.Remove(video);
-            await _context.SaveChangesAsync();
+            await DeleteVideoUseCase.ExecuteAsync(video);
             VideoList.Remove(video);
             await InvokeAsync(StateHasChanged);
         }
 
         private async Task DeleteSelectedVideos()
         {
-            var videosToDelete = VideoList.Where(x => x.IsChecked == true).ToList();
+            var videosToDelete = VideoList
+                .Where(x => x.IsChecked == true)
+                .ToList();
             foreach (var video in videosToDelete)
             {
-                _context.Videos.Remove(video);
+                await DeleteVideo(video);
                 VideoList.Remove(video);
             }
-            await _context.SaveChangesAsync();
             await InvokeAsync(StateHasChanged);
         }
     }

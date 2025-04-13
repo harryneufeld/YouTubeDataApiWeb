@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using YoutubeApi.Infrastructure.Persistence.Models;
+using YoutubeApi.Domain.Entities;
 
 namespace YoutubeApi.Infrastructure.Persistence.Contexts
 {

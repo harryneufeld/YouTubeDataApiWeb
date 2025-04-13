@@ -1,8 +1,8 @@
 ﻿#nullable disable
 using System.Net.Http.Headers;
 using System.Text.Json;
-using YoutubeApi.Domain.Models.CommentThread;
 using YoutubeApi.Infrastructure.ApiClient;
+using YoutubeApi.Infrastructure.ApiClients.v3.Models.CommentThread;
 using YoutubeApi.Infrastructure.Exceptions;
 
 namespace YoutubeApi.Infrastructure.ApiClients.v3.CommentThreads

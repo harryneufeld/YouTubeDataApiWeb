@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Text.Json;
-using YoutubeApi.Domain.Models.VideoData;
 using YoutubeApi.Infrastructure.ApiClient;
+using YoutubeApi.Infrastructure.ApiClients.v3.Models.VideoData;
 using YoutubeApi.Infrastructure.Exceptions;
 
 namespace YoutubeApi.Infrastructure.ApiClients.v3.Videos

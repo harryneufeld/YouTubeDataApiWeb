@@ -1,5 +1,4 @@
-﻿#nullable disable
-using CsvHelper;
+﻿using CsvHelper;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -7,7 +6,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.Xml;
-using YoutubeApi.Infrastructure.Persistence.Models.ExportData;
+using YoutubeApi.Domain.Entities.ExportData;
 
 namespace YoutubeApi.Infrastructure.IO
 {

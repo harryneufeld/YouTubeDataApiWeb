@@ -1,8 +1,10 @@
 ﻿@page "/videos"
 @page "/videos/{UserId:guid}"
+
 @using Microsoft.AspNetCore.Components.Forms
-@using YoutubeApi.Application.Dto.Excel
 @using MudBlazor
+@using YoutubeApi.Domain.Entities.ExportData
+@using YoutubeApi.Infrastructure.IO
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="my-3">
    @if (UserId != Guid.Empty)

@@ -1,5 +1,5 @@
-﻿using YoutubeApi.Infrastructure.Persistence.Models;
-using YoutubeApi.Infrastructure.Persistence.Models.ExportData;
+﻿using YoutubeApi.Domain.Entities;
+using YoutubeApi.Domain.Entities.ExportData;
 
 namespace YoutubeApi.Application.Mapper
 {
