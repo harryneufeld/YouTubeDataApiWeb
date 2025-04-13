@@ -2,6 +2,9 @@ using MudBlazor.Services;
 using Microsoft.EntityFrameworkCore;
 using YoutubeApi.Infrastructure.Persistence.Contexts;
 using YoutubeApi.Web.Components;
+using YoutubeApi.Application.UseCases;
+using YoutubeApi.Domain.Interfaces;
+using YoutubeApi.Infrastructure.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,13 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddDbContextFactory<VideoDbContext>();
+builder.Services.AddTransient<GetVideosByUserIdUseCase>();
+builder.Services.AddTransient<AddVideoUseCase>();
+builder.Services.AddTransient<DeleteVideoUseCase>();
+builder.Services.AddTransient<SaveChangesUseCase>();
+builder.Services.AddTransient<ImportVideosUseCase>();
+builder.Services.AddTransient<RemoveCommentUseCase>();
+builder.Services.AddScoped<IVideoRepository, VideoRepository>();
 
 var app = builder.Build();
 

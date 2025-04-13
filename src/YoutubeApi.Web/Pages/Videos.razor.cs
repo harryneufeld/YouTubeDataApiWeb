@@ -26,7 +26,9 @@ namespace YoutubeApi.Web.Pages
         [Inject] private GetVideosByUserIdUseCase GetVideosByUserIdUseCase { get; set; }
         [Inject] private AddVideoUseCase AddVideoUseCase { get; set; }
         [Inject] private DeleteVideoUseCase DeleteVideoUseCase { get; set; }
-
+        [Inject] private SaveChangesUseCase SaveChangesUseCase { get; set; }
+        [Inject] private ImportVideosUseCase ImportVideosUseCase { get; set; }
+        [Inject] private RemoveCommentUseCase RemoveCommentUseCase { get; set; }
         public Video Video { get; set; } = new Video();
         public IList<Video> VideoList = new List<Video>();
 
@@ -125,7 +127,7 @@ namespace YoutubeApi.Web.Pages
                     {
                         video.ValidationErrorMessage = "Video-ID is Empty!";
                         video.HasValidationError = true;
-                        await _context.SaveChangesAsync();
+                        await SaveChangesUseCase.ExecuteAsync();
                         continue;
                     }
                     // Getting Video-Title
@@ -146,7 +148,7 @@ namespace YoutubeApi.Web.Pages
                         if (videoSnippet?.items is not null)
                         {
                             video.VideoTitle = videoSnippet.items.FirstOrDefault()?.snippet.title;
-                            await _context.SaveChangesAsync();
+                            await SaveChangesUseCase.ExecuteAsync();
                             await InvokeAsync(StateHasChanged);
                         }
                     }
@@ -162,7 +164,7 @@ namespace YoutubeApi.Web.Pages
                     if (string.IsNullOrWhiteSpace(video.Url))
                     {
                         video.Url = $"https://www.youtube.com/watch?v={video.PublicId}";
-                        await _context.SaveChangesAsync();
+                        await SaveChangesUseCase.ExecuteAsync();
                     }
 
                     // Video Details
@@ -176,7 +178,7 @@ namespace YoutubeApi.Web.Pages
                         video.LikeCount = Int32.Parse(videoSnippet.items[0].statistics.likeCount ?? "0");
                         video.DislikeCount = Int32.Parse(videoSnippet.items[0].statistics.dislikeCount ?? "0");
                         video.ViewCount = Int32.Parse(videoSnippet.items[0].statistics.viewCount ?? "0");
-                        await _context.SaveChangesAsync();
+                        await SaveChangesUseCase.ExecuteAsync();
                     }
 
                     // Deleteing Comments that are incomplete
@@ -185,10 +187,12 @@ namespace YoutubeApi.Web.Pages
                         if (video.Comments.Any() && video.HasValidationError)
                         {
                             foreach (var com in video.Comments)
-                                _context.Remove(com);
+                            {
+                                await RemoveCommentUseCase.ExecuteAsync(com);
+                            }
                             video.ValidationErrorMessage = null;
                             video.HasValidationError = false;
-                            await _context.SaveChangesAsync();
+                            await SaveChangesUseCase.ExecuteAsync();
                         }
                         else if (video.Comments.Any() && !video.HasValidationError)
                         {
@@ -258,7 +262,7 @@ namespace YoutubeApi.Web.Pages
                         video.HasValidationError = true;
                         video.ValidationErrorMessage = e.Message + (e.InnerException != null ? e.InnerException.Message : "");
                     }
-                    if (await _context.SaveChangesAsync() == 0)
+                    if (await SaveChangesUseCase.ExecuteAsync() == 0)
                     {
                         _userMessage = new MarkupString($"{_userMessage + Environment.NewLine}No comments Added to {video.VideoTitle ?? video.PublicId}");
                     }
@@ -306,18 +310,18 @@ namespace YoutubeApi.Web.Pages
         private async Task ImportVideosFromFile()
         {
             var list = GetVideoIdsFromFile(_file, _selectedColumn.ToString());
-            foreach (string id in list)
+            var videos = list.Select(id => new Video
             {
-                _context.Videos.Add(new Video()
-                {
-                    PublicId = id,
-                    UserId = UserId
-                });
-                await _context.SaveChangesAsync();
-                _userMessage = new MarkupString($"File uploaded. {list.Length} videos found.");
-                await InvokeAsync(StateHasChanged);
-                VideoList = _context.Videos.Where(v => v.UserId == UserId).ToList();
-            }
+                PublicId = id,
+                UserId = UserId
+            }).ToList();
+
+            await ImportVideosUseCase.ExecuteAsync(videos);
+
+            _userMessage = new MarkupString($"File uploaded. {list.Length} videos found.");
+            await InvokeAsync(StateHasChanged);
+
+            VideoList = await GetVideosByUserIdUseCase.ExecuteAsync(UserId);
         }
 
         public string[] GetVideoIdsFromFile(string path, string column)

@@ -31,8 +31,14 @@ namespace YoutubeApi.Infrastructure.Persistence.Repositories
             _context.Videos.Remove(video);
         }
 
-        public async Task SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveComment(Comment comment)
+        {
+            _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
         }
     }

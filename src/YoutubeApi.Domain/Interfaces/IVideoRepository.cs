@@ -7,6 +7,7 @@ namespace YoutubeApi.Domain.Interfaces
         Task<List<Video>> GetVideosByUserIdAsync(Guid userId);
         Task AddVideoAsync(Video video);
         Task DeleteVideoAsync(Video video);
-        Task SaveChangesAsync();
+        Task<int> SaveChangesAsync();
+        Task RemoveComment(Comment comment);
     }
 }
