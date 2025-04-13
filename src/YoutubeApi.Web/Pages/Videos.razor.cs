@@ -54,8 +54,8 @@ namespace YoutubeApi.Web.Pages
                 {
                     var videos = await _context.Videos
                         .Where(v => v.UserId == UserId)
-                        .Include(v => v.Comments)
-                            .ThenInclude(c => c.ChildComments)
+                        //.Include(v => v.Comments)
+                        //    .ThenInclude(c => c.ChildComments)
                         .ToListAsync();
                     if (videos != null)
                         VideoList = videos;

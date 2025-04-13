@@ -1,0 +1,51 @@
+﻿@page "/comments"
+@page "/comments/{VideoId:guid}"
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.EntityFrameworkCore
+@using MudBlazor
+@inject NavigationManager NavigationManager
+
+<PageTitle>Youtube-Comments</PageTitle>
+
+<h1>Comments of: @Video?.VideoTitle</h1>
+<MudButton Variant="Variant.Filled" Color="Color.Primary" Class="my-5" href="@Video?.Url" target="_blank">Open Youtube</MudButton>
+<MudButton Variant="Variant.Filled" Color="Color.Secondary" Class="my-5 mx-5" OnClick="Back">Back to Video-List</MudButton>
+
+@if (_userMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @_userMessage
+    </div>
+}
+
+<MudSimpleTable Striped="true" Bordered="true">
+    <thead>
+        <tr>
+            <th>Author</th>
+            <th>Text</th>
+            <th>Replies</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var comment in CommentList)
+        {
+            <tr class="link-div" @onclick="@(() => NavigationManager.NavigateTo($"/comment/{comment.Id}"))">
+                <td>@comment.Author</td>
+                <td>@comment.Text</td>
+                <td>@(comment.ChildComments?.Count() ?? 0)</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2">
+                @CommentList.Count
+            </td>
+        </tr>
+    </tfoot>
+</MudSimpleTable>
+@if (_isBusy)
+{
+    <center><MudProgressCircular Color="Color.Default" Indeterminate="true" Class="my-5" /></center>
+}
+<MudButton Variant="Variant.Filled" Color="Color.Primary" Class="my-5" OnClick="Back">Back to Video-List</MudButton>
