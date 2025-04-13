@@ -1,4 +1,7 @@
 using MudBlazor.Services;
+using Microsoft.EntityFrameworkCore;
+using YoutubeApi.Infrastructure.Persistence.Contexts;
+using YoutubeApi.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,9 +12,17 @@ builder.Services.AddMudServices();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddDbContext<VideoDbContext>();
+builder.Services.AddDbContextFactory<VideoDbContext>();
 
 var app = builder.Build();
+
+// Get DbContextFactory and migrate database
+using (var scope = app.Services.CreateScope())
+{
+    var dbContextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<VideoDbContext>>();
+    using var dbContext = dbContextFactory.CreateDbContext();
+    dbContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

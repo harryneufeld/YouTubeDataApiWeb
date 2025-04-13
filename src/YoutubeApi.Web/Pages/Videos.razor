@@ -1,0 +1,162 @@
+﻿@page "/videos"
+@page "/videos/{UserId:guid}"
+@using Microsoft.AspNetCore.Components.Forms
+@using YoutubeApi.Application.Dto.Excel
+@using MudBlazor
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="my-3">
+   @if (UserId != Guid.Empty)
+   {
+       <MudCard Class="my-3">
+           <MudCardHeader>
+               <MudText Typo="Typo.h5">Your Userdata</MudText>
+           </MudCardHeader>
+           <MudCardContent>
+               <MudText>User-ID: @UserId</MudText>
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CopyUserId" Disabled="@_isBusy">
+                   Copy user-Id
+                   <MudIcon Icon="@Icons.Material.Filled.ContentCopy" Class="ml-2" />
+               </MudButton>
+           </MudCardContent>
+       </MudCard>
+   }
+
+   <MudGrid>
+       <MudItem xs="12" md="6">
+           <MudCard Class="my-3">
+               <MudCardHeader>
+                   <MudText Typo="Typo.h5">Add Video to List</MudText>
+               </MudCardHeader>
+               <MudCardContent>
+                   <EditForm Model="@Video" OnSubmit="AddVideo">
+                       <MudTextField Label="Video-Id" @bind-Value="Video.PublicId" FullWidth="true" />
+                       <MudButton Variant="Variant.Filled" Color="Color.Primary" Type="Submit" Class="mt-3" Disabled="@_isBusy">
+                           Add
+                       </MudButton>
+                   </EditForm>
+               </MudCardContent>
+           </MudCard>
+       </MudItem>
+       <MudItem xs="12" md="6">
+           <MudCard Class="my-3">
+               <MudCardHeader>
+                   <MudText Typo="Typo.h5">Import Videos from Excel File</MudText>
+               </MudCardHeader>
+               <MudCardContent>
+                   <MudAlert Severity="Severity.Info" Elevation="0">
+                       Please add a column-header (Title-Row) with the name of the column where the video-ids are stored.
+                   </MudAlert>
+                   <MudAlert Severity="Severity.Warning" Elevation="0">
+                       Cells with invalid formulas will be read as plain text. Ensure formulas are valid.
+                   </MudAlert>
+                   <MudFileUpload T="IBrowserFile" OnFilesChanged="UploadFile" />
+                   <MudSelect T="SheetColumnNames" Label="Column-Name for Video-ID" @bind-Value="_selectedColumn" FullWidth="true">
+                       @foreach (var column in Enum.GetNames(typeof(SheetColumnNames)))
+                       {
+                           <MudSelectItem T="SheetColumnNames" Value="@(Enum.Parse<SheetColumnNames>(column))">@column</MudSelectItem>
+                       }
+                   </MudSelect>
+                   <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ImportVideosFromFile" Class="mt-3" Disabled="@_isBusy">
+                       Import Videos
+                   </MudButton>
+               </MudCardContent>
+           </MudCard>
+       </MudItem>
+   </MudGrid>
+
+   <MudText Typo="Typo.h4" Class="my-3">Video List</MudText>
+
+   <MudGrid>
+       <MudItem xs="12">
+           <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadYoutubeData" Disabled="@_isBusy">
+               Fetch YouTube Data
+           </MudButton>
+           <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="CheckAll" Disabled="@_isBusy">
+               Select All
+           </MudButton>
+           <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="UncheckAll" Disabled="@_isBusy">
+               Deselect All
+           </MudButton>
+           <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="ExportExcel" Disabled="@_isBusy">
+               Export Selected (Excel)
+           </MudButton>
+           <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="ExportSketchEngine" Disabled="@_isBusy">
+               Export Selected (SketchEngine)
+           </MudButton>
+           <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="DeleteSelectedVideos" Disabled="@_isBusy">
+               Delete Selected
+           </MudButton>
+       </MudItem>
+   </MudGrid>
+
+   @if (_downloadProgress > 0 && _downloadProgress < 100)
+   {
+       <MudCard Class="my-3">
+           <MudCardHeader>
+               <MudText Typo="Typo.h5">Progress</MudText>
+           </MudCardHeader>
+           <MudCardContent>
+               <MudProgressLinear Value="@_downloadProgress" Max="100" Color="Color.Primary" />
+               @if (_userMessage.Value != null)
+               {
+                   <MudAlert Severity="Severity.Success" Class="my-3">@_userMessage</MudAlert>
+                   <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="DownloadCurrentFile" Disabled="@(_isBusy && !_isDownloadReady)">
+                       @if (_isBusy)
+                       {
+                           <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                           <MudText>Fetching...</MudText>
+                       }
+                       else
+                       {
+                           <MudText Typo="Typo.body1">Download File Again</MudText>
+                       }
+                   </MudButton>
+               }
+           </MudCardContent>
+       </MudCard>
+   }
+
+   <MudSimpleTable>
+       <thead>
+           <tr>
+               <th>#</th>
+               <th>Checked</th>
+               <th>Video Title</th>
+               <th>Video ID</th>
+               <th>Url</th>
+               <th>Comment Count</th>
+               <th>Error</th>
+               <th>Open</th>
+               <th>Delete</th>
+           </tr>
+       </thead>
+       <tbody>
+           @foreach (var video in VideoList)
+           {
+               <tr>
+                   <td><MudCheckBox T="bool" @bind-Checked="@video.IsChecked" /></td>
+                   <td>@video.VideoTitle</td>
+                   <td>@video.PublicId</td>
+                   <td><MudLink Href="@video.Url" Target="_blank">@video.Url</MudLink></td>
+                   <td>@video.Comments?.Count</td>
+                   <td>@(video.ValidationErrorMessage ?? "")</td>
+                   <td>
+                       <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo($"/comments/{video.Id}"))">
+                           <MudIcon Icon="@Icons.Material.Filled.ArrowForward" />
+                       </MudButton>
+                   </td>
+                   <td>
+                       <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteVideo(video))">
+                           <MudIcon Icon="@Icons.Material.Filled.Delete" />
+                       </MudButton>
+                   </td>
+               </tr>
+           }
+       </tbody>
+   </MudSimpleTable>
+
+    @if (_isBusy)
+    {
+        <center><MudProgressCircular Color="Color.Default" Indeterminate="true" Class="my-5" /></center>
+    }
+</MudContainer>

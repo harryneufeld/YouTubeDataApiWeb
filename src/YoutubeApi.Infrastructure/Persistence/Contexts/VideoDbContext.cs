@@ -10,10 +10,12 @@ namespace YoutubeApi.Infrastructure.Persistence.Contexts
 
         public string DbPath { get; private set; }
 
-        public VideoDbContext()
+        public VideoDbContext(DbContextOptions<VideoDbContext> options) : base(options)
         {
             var executingDirectory = AppContext.BaseDirectory;
-            DbPath = Path.Combine(executingDirectory, "Data", "VideoData.db");
+            if (!Directory.Exists(Path.Combine(executingDirectory, "Data")))
+                Directory.CreateDirectory(Path.Combine(executingDirectory, "Data"));
+            DbPath = Path.Combine(executingDirectory, "Data", "YoutubeApi.db");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)

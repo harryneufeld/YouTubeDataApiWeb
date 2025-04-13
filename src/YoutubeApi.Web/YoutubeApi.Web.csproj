@@ -9,5 +9,12 @@
 
   <ItemGroup>
     <PackageReference Include="MudBlazor" Version="8.*" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\YoutubeApi.Application\YoutubeApi.Application.csproj" />
+    <ProjectReference Include="..\YoutubeApi.Infrastructure\YoutubeApi.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

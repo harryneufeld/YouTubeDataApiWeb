@@ -1,0 +1,41 @@
+﻿@page "/admin-panel"
+@using Microsoft.EntityFrameworkCore
+@using MudBlazor
+@inject NavigationManager NavigationManager
+
+<PageTitle>Admin-Panel</PageTitle>
+
+<h1>Users</h1>
+
+@if (_userMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @_userMessage
+    </div>
+}
+
+<MudSimpleTable>
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>VideoCount</th>
+            <th>CreatedAt</th>
+            <th>Load</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var video in VideoList)
+        {
+            <tr>
+                <td>@video.UserId</td>
+                <td>@video.VideoCount</td>
+                <td>@video.CreatedAt</td>
+                <td>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => LoadUser(video.UserId)">Load</MudButton>
+                </td>
+            </tr>
+        }
+    </tbody>
+</MudSimpleTable>
+
+

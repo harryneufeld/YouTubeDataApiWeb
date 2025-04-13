@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeApi.Web", "src\Web\YoutubeApi.Web\YoutubeApi.Web.csproj", "{C2FF4B9A-7E4A-10F9-9BC9-1E50ED522F44}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeApi.Web", "src\YoutubeApi.Web\YoutubeApi.Web.csproj", "{C2FF4B9A-7E4A-10F9-9BC9-1E50ED522F44}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeApi.Application", "src\YoutubeApi.Application\YoutubeApi.Application.csproj", "{556150CA-B599-48E0-B498-F910E822CF45}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6F152E44-9FA2-4DD3-9C57-7B4355C79364}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{CB51A639-06E5-4FFF-A2ED-552C7F59D2C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeApi.Infrastructure", "src\YoutubeApi.Infrastructure\YoutubeApi.Infrastructure.csproj", "{79B8681A-55E1-970A-8682-8E93F657C901}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{78762B0E-BD61-48FD-BB20-B3ECE9329E5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78762B0E-BD61-48FD-BB20-B3ECE9329E5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78762B0E-BD61-48FD-BB20-B3ECE9329E5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79B8681A-55E1-970A-8682-8E93F657C901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79B8681A-55E1-970A-8682-8E93F657C901}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79B8681A-55E1-970A-8682-8E93F657C901}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79B8681A-55E1-970A-8682-8E93F657C901}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,6 +47,7 @@ Global
 		{C2FF4B9A-7E4A-10F9-9BC9-1E50ED522F44} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{556150CA-B599-48E0-B498-F910E822CF45} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{78762B0E-BD61-48FD-BB20-B3ECE9329E5E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{79B8681A-55E1-970A-8682-8E93F657C901} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5EE7AFE-1F7F-4C9C-AA68-52D50AA6F515}
