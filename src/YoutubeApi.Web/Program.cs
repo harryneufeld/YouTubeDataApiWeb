@@ -22,6 +22,7 @@ builder.Services.AddTransient<DeleteVideoUseCase>();
 builder.Services.AddTransient<SaveChangesUseCase>();
 builder.Services.AddTransient<ImportVideosUseCase>();
 builder.Services.AddTransient<RemoveCommentUseCase>();
+builder.Services.AddTransient<QueryAllVideosUseCase>();
 builder.Services.AddScoped<IVideoRepository, VideoRepository>();
 
 var app = builder.Build();

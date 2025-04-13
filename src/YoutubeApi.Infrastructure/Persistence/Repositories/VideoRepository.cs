@@ -41,5 +41,10 @@ namespace YoutubeApi.Infrastructure.Persistence.Repositories
             _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
         }
+
+        public IQueryable<IGrouping<Guid, Video>> QueryVideosGroupedByUser()
+        {
+            return _context.Videos.GroupBy(v => v.UserId);
+        }
     }
 }

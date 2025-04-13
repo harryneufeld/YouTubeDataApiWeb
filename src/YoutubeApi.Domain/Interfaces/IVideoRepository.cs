@@ -9,5 +9,6 @@ namespace YoutubeApi.Domain.Interfaces
         Task DeleteVideoAsync(Video video);
         Task<int> SaveChangesAsync();
         Task RemoveComment(Comment comment);
+        IQueryable<IGrouping<Guid, Video>> QueryVideosGroupedByUser();
     }
 }
