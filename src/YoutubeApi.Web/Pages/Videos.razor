@@ -32,7 +32,7 @@
                <MudCardContent>
                    <EditForm Model="@Video" OnSubmit="AddVideo">
                        <MudTextField Label="Video-Id" @bind-Value="Video.PublicId" FullWidth="true" />
-                       <MudButton Variant="Variant.Filled" Color="Color.Primary" Type="Submit" Class="mt-3" Disabled="@_isBusy">
+                       <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="async () => await AddVideo()" Class="mt-3" Disabled="@_isBusy">
                            Add
                        </MudButton>
                    </EditForm>
