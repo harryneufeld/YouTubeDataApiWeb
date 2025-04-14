@@ -1,0 +1,23 @@
+services:
+  youtubeapi:
+    image: ghcr.io/harryneufeld/youtubedataapiweb:latest
+    container_name: youtubeapi
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    volumes:
+      - youtubeapi_data:/app/Data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.youtubeapi.rule=Host(`api.deine-domain.de`)"
+      - "traefik.http.routers.youtubeapi.entrypoints=websecure"
+      - "traefik.http.routers.youtubeapi.tls.certresolver=letsencrypt"
+    networks:
+      - web
+
+volumes:
+  youtubeapi_data:
+
+networks:
+  web:
+    external: true
