@@ -1,5 +1,6 @@
 using MudBlazor.Services;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using YoutubeApi.Infrastructure.Persistence.Contexts;
 using YoutubeApi.Web.Components;
 using YoutubeApi.Application.UseCases;
@@ -9,6 +10,12 @@ using YoutubeApi.Application.UseCases.VideoUseCases;
 using YoutubeApi.Application.UseCases.CommentUseCases;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add logging
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext());
 
 // Add MudBlazor services
 builder.Services.AddMudServices();

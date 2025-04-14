@@ -421,7 +421,7 @@ namespace YoutubeApi.Web.Pages
             }
             catch (Exception ex)
             {
-                Log.Error($"Error exporting videos in chunks: {ex.Message}");
+                Log.Error(ex, $"Error exporting videos in chunks: {ex.Message}");
                 return null!;
             }
         }
@@ -439,7 +439,13 @@ namespace YoutubeApi.Web.Pages
             }
             if (exportList != null)
             {
-                int count = videos.Sum(x => (x.Comments.Count + x.Comments.Sum(y => y.ChildComments.Count)));
+                int count = exportList.Count;
+                if (count == 0)
+                {
+                    _userMessage = new MarkupString("No comments found for export.");
+                    await InvokeAsync(StateHasChanged);
+                    return null!;
+                }
 
                 ListExportHelper.ProgressChanged += ListExportProgressChanged;
                 filePath = await ListExportHelper.ExportToExcel(exportList, filePath);
@@ -454,9 +460,8 @@ namespace YoutubeApi.Web.Pages
         {
             foreach (var video in videos)
             {
-                var comments = await GetCommentsUseCase.ExecuteAsync(video.Id);
-                video.Comments = comments;
-                if (comments?.Count > 0)
+                video.Comments = await GetCommentsUseCase.ExecuteAsync(video.Id);
+                if (video.Comments?.Count > 0)
                 {
                     foreach (var comment in video.Comments)
                     {
