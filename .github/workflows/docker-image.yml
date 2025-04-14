@@ -26,7 +26,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/youtubedataapiweb:latest ./src/YoutubeApi.Web/
+          docker build -f src/YoutubeApi.Web/Dockerfile -t ghcr.io/harryneufeld/youtubedataapiweb:latest .
+
 
       - name: Push Docker image to GHCR
         run: |
