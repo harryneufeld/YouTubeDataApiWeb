@@ -24,7 +24,7 @@ namespace YoutubeApi.Web.Pages
         [Parameter] public Guid UserId { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
         [Inject] public IJSRuntime JSRuntime { get; set; }
-        [Inject] public IConfiguration _config { get; set; } = null!;
+        [Inject] public IConfiguration Config { get; set; } = null!;
         [Inject] public GetVideosByUserIdUseCase GetVideosByUserIdUseCase { get; set; } = null!;
         [Inject] public GetCommentsUseCase GetCommentsUseCase { get; set; } = null!;
         [Inject] public AddVideoUseCase AddVideoUseCase { get; set; } = null!;
@@ -111,7 +111,7 @@ namespace YoutubeApi.Web.Pages
             await InvokeAsync(StateHasChanged);
             if (VideoList != null)
             {
-                var apiKey = _config.GetValue<string>("YoutubeApiKey");
+                var apiKey = Config.GetValue<string>("YoutubeApiKey");
                 var commentThreadsClient = new CommentThreadsApi(apiKey);
                 var videoClient = new VideosApi(apiKey);
                 int videoCount = 0;
@@ -450,7 +450,7 @@ namespace YoutubeApi.Web.Pages
             return filePath;
         }
 
-        private static async Task MapVideosToExportList(IList<Video> videos, List<YoutubeCommentVideoDetails> exportList)
+        private async Task MapVideosToExportList(IList<Video> videos, List<YoutubeCommentVideoDetails> exportList)
         {
             foreach (var video in videos)
             {
