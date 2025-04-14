@@ -15,21 +15,23 @@ using YoutubeApi.Domain.Entities;
 using YoutubeApi.Domain.Entities.ExportData;
 using YoutubeApi.Application.UseCases;
 using YoutubeApi.Application.UseCases.VideoUseCases;
+using YoutubeApi.Application.UseCases.CommentUseCases;
 
 namespace YoutubeApi.Web.Pages
 {
     public partial class Videos
     {
         [Parameter] public Guid UserId { get; set; }
-        [Inject] NavigationManager NavigationManager { get; set; }
-        [Inject] IJSRuntime JSRuntime { get; set; }
-        [Inject] private IConfiguration _config { get; set; }
-        [Inject] private GetVideosByUserIdUseCase GetVideosByUserIdUseCase { get; set; }
-        [Inject] private AddVideoUseCase AddVideoUseCase { get; set; }
-        [Inject] private DeleteVideoUseCase DeleteVideoUseCase { get; set; }
-        [Inject] private SaveChangesUseCase SaveChangesUseCase { get; set; }
-        [Inject] private ImportVideosUseCase ImportVideosUseCase { get; set; }
-        [Inject] private RemoveCommentUseCase RemoveCommentUseCase { get; set; }
+        [Inject] public NavigationManager NavigationManager { get; set; }
+        [Inject] public IJSRuntime JSRuntime { get; set; }
+        [Inject] public IConfiguration _config { get; set; } = null!;
+        [Inject] public GetVideosByUserIdUseCase GetVideosByUserIdUseCase { get; set; } = null!;
+        [Inject] public GetCommentsUseCase GetCommentsUseCase { get; set; } = null!;
+        [Inject] public AddVideoUseCase AddVideoUseCase { get; set; } = null!;
+        [Inject] public DeleteVideoUseCase DeleteVideoUseCase { get; set; } = null!;
+        [Inject] public SaveChangesUseCase SaveChangesUseCase { get; set; } = null!;
+        [Inject] public ImportVideosUseCase ImportVideosUseCase { get; set; } = null!;
+        [Inject] public RemoveCommentUseCase RemoveCommentUseCase { get; set; } = null!;
         public Video Video { get; set; } = new Video();
         public IList<Video> VideoList = new List<Video>();
 
@@ -429,7 +431,7 @@ namespace YoutubeApi.Web.Pages
             var exportList = new List<YoutubeCommentVideoDetails>();
             try
             {
-                MapVideosToExportList(videos, exportList);
+                await MapVideosToExportList(videos, exportList);
             }
             catch (Exception e)
             {
@@ -448,11 +450,13 @@ namespace YoutubeApi.Web.Pages
             return filePath;
         }
 
-        private static void MapVideosToExportList(IList<Video> videos, List<YoutubeCommentVideoDetails> exportList)
+        private static async Task MapVideosToExportList(IList<Video> videos, List<YoutubeCommentVideoDetails> exportList)
         {
             foreach (var video in videos)
             {
-                if (video.Comments?.Count > 0)
+                var comments = await GetCommentsUseCase.ExecuteAsync(video.Id);
+                video.Comments = comments;
+                if (comments?.Count > 0)
                 {
                     foreach (var comment in video.Comments)
                     {
