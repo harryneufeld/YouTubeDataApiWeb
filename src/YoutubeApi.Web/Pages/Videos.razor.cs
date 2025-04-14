@@ -399,6 +399,8 @@ namespace YoutubeApi.Web.Pages
             const int chunkSize = 2_000;
             int totalVideos = videos.Count;
             int numberOfChunks = (int)Math.Ceiling((double)totalVideos / chunkSize);
+            if (!Directory.Exists("wwwroot/files"))
+                Directory.CreateDirectory("wwwroot/files");
             string directoryPath = Path.Combine("wwwroot/files", baseFilePath);
 
             try

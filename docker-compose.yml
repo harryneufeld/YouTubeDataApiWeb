@@ -8,6 +8,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
+      - YOUTUBE_API_KEY=YOURAPIKEYGOESHERE
     volumes:
      - /var/youtubeapi/data:/app/Data
     labels:
