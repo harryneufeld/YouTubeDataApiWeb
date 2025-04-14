@@ -366,28 +366,28 @@ namespace YoutubeApi.Web.Pages
                 _isDownloadReady = true;
                 if (_downloadPath is not null)
                     await DownloadCurrentFile();
-                UncheckAll();
+                await UncheckAll();
             }
 
             _isBusy = false;
         }
 
-        private void UncheckAll()
+        private async Task UncheckAll()
         {
             for (int i = 0; i < VideoList.Count; i++)
             {
                 VideoList[i].IsChecked = false;
             }
-            InvokeAsync(StateHasChanged);
+            // await InvokeAsync(StateHasChanged);
         }
 
-        private void CheckAll()
+        private async Task CheckAll()
         {
             for (int i = 0; i < VideoList.Count; i++)
             {
                 VideoList[i].IsChecked = true;
             }
-            InvokeAsync(StateHasChanged);
+            // await InvokeAsync(StateHasChanged);
         }
 
         private async Task<string> ExportAllVideosInChunks(IList<Video> videos, string baseFilePath)

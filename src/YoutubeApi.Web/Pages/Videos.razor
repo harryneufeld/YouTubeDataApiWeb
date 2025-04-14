@@ -135,7 +135,7 @@
            @foreach (var video in VideoList)
            {
                <tr>
-                   <td><MudCheckBox T="bool" @bind-Checked="@video.IsChecked" /></td>
+                   <td><MudCheckBox T="bool" @bind-Value="@video.IsChecked" /></td>
                    <td>@video.VideoTitle</td>
                    <td>@video.PublicId</td>
                    <td><MudLink Href="@video.Url" Target="_blank">@video.Url</MudLink></td>
