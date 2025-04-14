@@ -111,7 +111,9 @@ namespace YoutubeApi.Web.Pages
             await InvokeAsync(StateHasChanged);
             if (VideoList != null)
             {
-                var apiKey = Config.GetValue<string>("YoutubeApiKey");
+                // get api key from environment variable
+                var apiKeyEnv = Environment.GetEnvironmentVariable("YOUTUBE_API_KEY");
+                var apiKey = !string.IsNullOrEmpty(apiKeyEnv) ? apiKeyEnv : Config.GetValue<string>("YoutubeApiKey");
                 var commentThreadsClient = new CommentThreadsApi(apiKey);
                 var videoClient = new VideosApi(apiKey);
                 int videoCount = 0;
