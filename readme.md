@@ -1,4 +1,53 @@
 # Youtube Data API Client
+This is a web application designed to extract and analyze metadata and comments from YouTube videos. It allows users to fetch structured data using the official YouTube Data API, store it in a database, and export it in various formats for further analysis.
+
+## Key Features
+- [x] Fetch video metadata and all available comments from YouTube
+- [x] Store structured video and comment data in a persistent database
+- [x] Export data in multiple formats:
+  - [x] **CSV** for spreadsheet tools
+  - [x] **Excel (.xlsx)** for advanced editing
+  - [x] **Sketch Engine XML** for corpus linguistics and textual analysis
+- [x] Built with Clean Architecture principles for maintainability and testability
+- [x] Includes a modern Blazor Server UI for an interactive and responsive experience
+
+This app is made for researchers, analysts, and content professionals who need structured access to YouTube data for qualitative or quantitative analysis.
+
+## Getting Started
+
+You can run this app locally using Docker, on a web server with asp.net-core 9 or windows running the exe or with iis. An example `docker-compose.yml` is included in the repository to get you up and running quickly.
+
+### Run with Docker
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/harryneufeld/YouTubeDataApiWeb
+   ```
+
+2. **Start the application:**
+
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Set correct volume permissions** (optional, required for mounted volumes):
+
+   ```bash
+   # Get the container ID
+   docker ps
+
+   # Check the user ID used in the container
+   docker exec -it <container-id> id
+   # or by container name
+   docker exec -it youtubeapiweb id
+
+   # Set file permissions for the data directory (example UID: 1654)
+   sudo chown -R 1337:1337 /var/youtubeapi/data
+   ```
+
+> 🔗 **Live Demo:** You can try out a working instance at  
+> [youtube.api.harry-neufeld.de](https://youtube.api.harry-neufeld.de)
 
 ## Architecture
 
@@ -24,3 +73,5 @@ This project follows the principles of **Clean Architecture** as described by *R
 - Dependencies point *inward*, and outer layers have no influence on inner layers. This allows for high testability, loose coupling, and long-term maintainability.
 
 This layered approach provides a clean separation of concerns, easy testability, and flexibility for future changes such as switching database technologies or exposing new UI frontends.
+
+## Usage
