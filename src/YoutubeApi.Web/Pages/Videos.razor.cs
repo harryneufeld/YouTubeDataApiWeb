@@ -466,7 +466,7 @@ namespace YoutubeApi.Web.Pages
             foreach (var video in videos)
             {
                 video.Comments = await GetCommentsUseCase.ExecuteAsync(video.Id);
-                if (video.Comments?.Count > 0)
+                if (video.Comments != null && video.Comments.Count > 0)
                 {
                     foreach (var comment in video.Comments)
                     {
@@ -527,7 +527,8 @@ namespace YoutubeApi.Web.Pages
                 string filePath = String.Concat("video_comments_", VideoList.FirstOrDefault().UserId);
                 foreach (var video in videoList)
                 {
-                    if (video.Comments != null)
+                    video.Comments = await GetCommentsUseCase.ExecuteAsync(video.Id);
+                    if (video.Comments != null && video.Comments.Count > 0)
                     {
                         list.AddRange(VideoMapper.MapVideoToDocNode(video));
                     }
