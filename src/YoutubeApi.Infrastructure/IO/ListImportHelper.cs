@@ -12,7 +12,7 @@ namespace YoutubeApi.Infrastructure.IO
             {
                 throw new FileNotFoundException("File not found", filePath);
             }
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            // ExcelPackage.License.SetNonCommercialPersonal("Harry Neufeld");
 
             // old code
             using (var package = new ExcelPackage(new FileInfo(filePath)))

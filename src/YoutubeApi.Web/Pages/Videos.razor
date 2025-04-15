@@ -51,14 +51,24 @@
                    <MudAlert Severity="Severity.Warning" Elevation="0">
                        Cells with invalid formulas will be read as plain text. Ensure formulas are valid.
                    </MudAlert>
-                   <MudFileUpload T="IBrowserFile" OnFilesChanged="UploadFile" />
-                   <MudSelect T="SheetColumnNames" Label="Column-Name for Video-ID" @bind-Value="_selectedColumn" FullWidth="true">
-                       @foreach (var column in Enum.GetNames(typeof(SheetColumnNames)))
-                       {
-                           <MudSelectItem T="SheetColumnNames" Value="@(Enum.Parse<SheetColumnNames>(column))">@column</MudSelectItem>
-                       }
-                   </MudSelect>
-                   <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ImportVideosFromFile" Class="mt-3" Disabled="@_isBusy">
+                    <MudStack Row="true" Spacing="2" Class="my-5" AlignItems="AlignItems.Center">
+                        <MudFileUpload T="IBrowserFile" OnFilesChanged="UploadFile">
+                            <ActivatorContent>
+                                <MudButton Variant="Variant.Outlined"
+                                           Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.CloudUpload">
+                                    Upload Files
+                                </MudButton>
+                            </ActivatorContent>
+                        </MudFileUpload>
+                        <MudSelect T="SheetColumnNames" Label="Column-Name for Video-ID" @bind-Value="_selectedColumn">
+                            @foreach (var column in Enum.GetNames(typeof(SheetColumnNames)))
+                            {
+                                <MudSelectItem T="SheetColumnNames" Value="@(Enum.Parse<SheetColumnNames>(column))">@column</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudStack>
+                   <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Upload" OnClick="ImportVideosFromFile" Class="mt-3" Disabled="@_isBusy">
                        Import Videos
                    </MudButton>
                </MudCardContent>

@@ -2,9 +2,8 @@
 @using Microsoft.AspNetCore.Components.Web
 @using MudBlazor
 
-<PageTitle>YoutubeApi Client</PageTitle>
+<PageTitle>Youtube Data API Client</PageTitle>
 
-<MudText Typo="Typo.h1" GutterBottom="true">YoutubeApi Client</MudText>
 <MudText Class="mb-8">A client application to interact with the YouTube API, providing features such as gaining video title, 
     channel details, and comments from a list of video ids. Gathered data is being stored into the database and can be exported 
     to excel, csv or sketch engine (xml).</MudText>
@@ -15,7 +14,7 @@
         <MudBlazor.MudText Typo="Typo.h5">YoutubeApi Client</MudBlazor.MudText>
     </MudBlazor.MudCardHeader>
     <MudBlazor.MudCardContent>
-        <MudBlazor.MudTextField @bind-Value="UserId" Label="Video ID" Placeholder="Enter Video ID" />
+        <MudBlazor.MudTextField @bind-Value="UserId" Label="User-ID" Placeholder="Enter User-ID" />
     </MudBlazor.MudCardContent>
     <MudBlazor.MudCardActions>
         <MudBlazor.MudButton Color="Color.Primary" OnClick="LoadYoutubeData">Load Videos</MudBlazor.MudButton>

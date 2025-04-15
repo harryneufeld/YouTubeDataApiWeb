@@ -306,10 +306,11 @@ namespace YoutubeApi.Web.Pages
             }
             catch (Exception ex)
             {
-                _userMessage = new MarkupString(ex.Message);
-                await InvokeAsync(StateHasChanged);
+                Log.Error(ex, "Fehler beim Upload der Datei");
+                _userMessage = new MarkupString("Fehler beim Upload der Datei.");
             }
             _isBusy = false;
+            await InvokeAsync(StateHasChanged);
         }
 
         private async Task ImportVideosFromFile()
