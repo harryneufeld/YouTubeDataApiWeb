@@ -173,7 +173,7 @@ namespace YoutubeApi.Web.Pages
                     }
 
                     // Video Details
-                    if (videoSnippet != null)
+                    if (videoSnippet != null && videoSnippet.items.Count() > 0)
                     {
                         // video.Duration = Int32.Parse(videoSnippet.items[0].contentDetails.duration);
                         video.Description = videoSnippet.items[0].snippet.description;
@@ -184,6 +184,12 @@ namespace YoutubeApi.Web.Pages
                         video.DislikeCount = Int32.Parse(videoSnippet.items[0].statistics.dislikeCount ?? "0");
                         video.ViewCount = Int32.Parse(videoSnippet.items[0].statistics.viewCount ?? "0");
                         await SaveChangesUseCase.ExecuteAsync();
+                    } else
+                    {
+                        video.HasValidationError = true;
+                        video.ValidationErrorMessage = "PublicId invalid!";
+                        await SaveChangesUseCase.ExecuteAsync();
+                        continue;
                     }
 
                     // Deleteing Comments that are incomplete
