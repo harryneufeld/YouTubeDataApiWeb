@@ -1,5 +1,12 @@
 # Youtube Data API Client
-This is a web application designed to extract and analyze metadata and comments from YouTube videos. It allows users to fetch structured data using the official YouTube Data API, store it in a database, and export it in various formats for further analysis.
+This is a web application designed to extract and analyze metadata and comments from YouTube videos. 
+It allows users to fetch structured data using the official YouTube Data API, store it in a database, 
+and export it in various formats for further analysis.
+
+This app is built on the latest **.NET 9** platform and leverages **Blazor Server** to deliver a highly interactive and responsive user experience. 
+Blazor Server maintains a persistent SignalR connection between client and server, enabling **real-time updates**, **streamed content rendering**, and **low-latency interactivity** 
+without requiring full page reloads.
+All fetched data is being stored in a **lightweight, file-based SQLite database**, making local setups fast and portable.
 
 ## Key Features
 - [x] Fetch video metadata and all available comments from YouTube
@@ -12,6 +19,15 @@ This is a web application designed to extract and analyze metadata and comments 
 - [x] Includes a modern Blazor Server UI for an interactive and responsive experience
 
 This app is made for researchers, analysts, and content professionals who need structured access to YouTube data for qualitative or quantitative analysis.
+
+## Technologies Used
+- **.NET 9** with **C#**
+- **Blazor Server** with reactive, streamed UI via SignalR
+- **Entity Framework Core** with **SQLite** as the default database
+- **YouTube Data API v3** for fetching video metadata and comments
+- **Docker** & **Docker Compose** for containerized fast & simple deployment
+- Follows **Clean Architecture** and **Domain-Driven Design (DDD)** principles
+- Entirely built on **open source software**
 
 ## Getting Started
 
@@ -73,5 +89,3 @@ This project follows the principles of **Clean Architecture** as described by *R
 - Dependencies point *inward*, and outer layers have no influence on inner layers. This allows for high testability, loose coupling, and long-term maintainability.
 
 This layered approach provides a clean separation of concerns, easy testability, and flexibility for future changes such as switching database technologies or exposing new UI frontends.
-
-## Usage
