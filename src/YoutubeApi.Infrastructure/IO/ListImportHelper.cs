@@ -6,28 +6,6 @@ namespace YoutubeApi.Infrastructure.IO
 {
     public static class ListImportHelper
     {
-        public static string[] GetColumnValuesFromExcelFile(string filePath, string columnName)
-        {
-            if (!File.Exists(filePath))
-            {
-                throw new FileNotFoundException("File not found", filePath);
-            }
-            // ExcelPackage.License.SetNonCommercialPersonal("Harry Neufeld");
-
-            // old code
-            using (var package = new ExcelPackage(new FileInfo(filePath)))
-            {
-                var worksheet = package.Workbook.Worksheets[0]; // Assuming the first worksheet
-
-                // Get the values of the cells in the specified column
-                var columnValues = worksheet.Cells[$"{columnName}2:{columnName}{worksheet.Dimension.End.Row}"]
-                    .Select(c => c.Text)
-                    .ToArray();
-
-                return columnValues;
-            }
-        }
-
         public static string[] GetColumnValuesFromExcelFileIgnoreFormularErrors(string filePath, string columnName)
         {
             string[] data;

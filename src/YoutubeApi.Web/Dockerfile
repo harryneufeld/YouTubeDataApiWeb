@@ -6,7 +6,10 @@ USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
-RUN mkdir -p /app/wwwroot/files && chown -R app:app /app/wwwroot/files
+RUN mkdir -p /app/wwwroot/files
+RUN chown -R app:app /app/wwwroot/files
+RUN mkdir -p /app/Data
+RUN chown -R app:app /app/Data
 
 # Diese Stufe wird zum Erstellen des Dienstprojekts verwendet.
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
